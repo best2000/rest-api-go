@@ -9,7 +9,7 @@ import (
 )
 
 type DogHandler struct{
-	dogRepo *repo.DogRepo
+	DogRepo *repo.DogRepo
 }
 
 func (h *DogHandler) HandleCreateDog(w http.ResponseWriter, r *http.Request) {
@@ -35,16 +35,20 @@ func (h *DogHandler) HandleDeleteDogByID(w http.ResponseWriter, r *http.Request)
 func (h *DogHandler) HandleSwapDogNameByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DogHandler HandleSwapDogNameByID")
 	//begin txn
-	txn, _ := h.dogRepo.Db.BeginTx(r.Context(), nil)
+	txn, _ := h.DogRepo.Db.BeginTx(r.Context(), nil)
 
 	txn.Exec("SELECT pg_sleep(10)")
 
+	dog1 := model.Dog{}
 	//update dog
-	h.dogRepo.UpdateDogById(nil, model.Dog{}, txn)
+	h.DogRepo.UpdateDogById(r.Context(), dog1, txn)
 
+	dog2 := model.Dog{}
 	//update another dog
-	h.dogRepo.UpdateDogById(nil, model.Dog{}, txn)
+	h.DogRepo.UpdateDogById(r.Context(), dog2, txn)
 	
 	//commit txn
 	txn.Commit()
+	
+	w.Write([]byte("done"))
 }
