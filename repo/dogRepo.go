@@ -17,7 +17,7 @@ func (r *DogRepo) CreateDog(ctx context.Context, d model.Dog, db util.DbExecutor
 	if db == nil {
 		db = r.Db	
 	}
-	sql := fmt.Sprintf("INSERT INTO dog(name, breed) VALUES (%s, %s)", d.Name, d.Breed)
+	sql := fmt.Sprintf("INSERT INTO dogs(name, breed) VALUES (%s, %s);", d.Name, d.Breed)
 	_, err := db.ExecContext(ctx, sql)
 	return err
 }
@@ -32,7 +32,7 @@ func (r *DogRepo) GetDogById(ctx context.Context, id uint32, db util.DbQuerist) 
 		db = r.Db	
 	}
 	fmt.Println("DogRepo GetDogById")
-	sql := fmt.Sprintf("SELECT * FROM dog WHERE id = %d;", id)
+	sql := fmt.Sprintf("SELECT * FROM dogs WHERE id = %d;", id)
 	_, err := db.QueryContext(ctx, sql)
 	dog := model.Dog{}
 	return dog, err
@@ -44,7 +44,7 @@ func (r *DogRepo) UpdateDogById(ctx context.Context , d model.Dog, db util.DbExe
 		db = r.Db	
 	}
 	sql := fmt.Sprintf(`
-		UPDATE dog 
+		UPDATE dogs 
 		SET name  = %s
 			breed = %s	
 		WHERE id = %d;`,
@@ -59,7 +59,7 @@ func (r *DogRepo) DeleteDogById(ctx context.Context, id uint32, db util.DbExecut
 	if db == nil {
 		db = r.Db	
 	}
-	sql := fmt.Sprintf("DELETE FROM dog WHERE id = %d", id)
+	sql := fmt.Sprintf("DELETE FROM dogs WHERE id = %d", id)
 	_, err := db.ExecContext(ctx, sql)
 	return err
 }
