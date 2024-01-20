@@ -50,7 +50,7 @@ func (h *DogHandler) HandleGetDogByID(w http.ResponseWriter, r *http.Request) {
 		return
     }
 
-	w.Write(j)
+		w.Write(j)
 }
 
 func (h *DogHandler) HandleUpdateDogByID(w http.ResponseWriter, r *http.Request) {
