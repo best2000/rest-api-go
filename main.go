@@ -19,14 +19,17 @@ func main() {
 	defer db.Close()
 	fmt.Println("connected to database.")
 
+
+	//add middlewear pre/post handle, logger, request id 
 	//init router
 	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 	r.Use(middleware.Heartbeat("/"))
+	
 
 	dogRepo := repo.DogRepo{Db: db}
 	dogHandler := handler.DogHandler{DogRepo: &dogRepo}
-	r.Route("/dog", func(r chi.Router) {
-		r.Use(middleware.Logger)
+	r.Route("/dogs", func(r chi.Router) {
 		r.Get("/{id}", dogHandler.HandleGetDogByID)
 		r.Get("/", dogHandler.HandleListAllDog)
 		r.Post("/", dogHandler.HandleCreateDog)
@@ -34,12 +37,22 @@ func main() {
 		r.Delete("/{id}", dogHandler.HandleDeleteDogByID)
 	})
 
-	fmt.Println("start server.")
+	fmt.Println("start server "+config.App.Addr)
 
 	s := &http.Server{
 		Addr:    config.App.Addr,
 		Handler: r,
 	}
 
-	s.ListenAndServe()
+	go s.ListenAndServe()
+
+	fmt.Println(`
+ ______     ______     ______     ______      ______     ______   __    
+/\  == \   /\  ___\   /\  ___\   /\__  _\    /\  __ \   /\  == \ /\ \   
+\ \  __<   \ \  __\   \ \___  \  \/_/\ \/    \ \  __ \  \ \  _-/ \ \ \  
+ \ \_\ \_\  \ \_____\  \/\_____\    \ \_\     \ \_\ \_\  \ \_\    \ \_\ 
+  \/_/ /_/   \/_____/   \/_____/     \/_/      \/_/\/_/   \/_/     \/_/`)
+	
+	c := make(chan int)
+	<-c
 }

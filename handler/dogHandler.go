@@ -1,11 +1,14 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/best2000/rest-api-go/model"
 	"github.com/best2000/rest-api-go/repo"
+	"github.com/go-chi/chi/v5"
 )
 
 type DogHandler struct{
@@ -20,13 +23,34 @@ func (h *DogHandler) HandleCreateDog(w http.ResponseWriter, r *http.Request) {
 
 func (h *DogHandler) HandleListAllDog(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DogHandler HandleListAllDog")
+	w.Write([]byte("hello"))
 }
 
 func (h *DogHandler) HandleGetDogByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DogHandler HandleGetDogByID")
-	// var id int
-	// dog, err := h.DogRepo.GetDogById(r.Context(), id, nil)
-	
+	//parse id
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+    if err != nil {
+        fmt.Println(err.Error())
+		w.Write([]byte(err.Error()))
+		return
+    }
+	//get from db
+	dog, err := h.DogRepo.GetDogById(r.Context(), id, nil)
+	if err != nil {
+        fmt.Println(err.Error())
+		w.Write([]byte(err.Error()))
+		return
+    }
+	//encode json
+	j, err := json.Marshal(dog)
+	if err != nil {
+        fmt.Println(err.Error())
+		w.Write([]byte(err.Error()))
+		return
+    }
+
+	w.Write(j)
 }
 
 func (h *DogHandler) HandleUpdateDogByID(w http.ResponseWriter, r *http.Request) {
@@ -37,25 +61,43 @@ func (h *DogHandler) HandleUpdateDogByID(w http.ResponseWriter, r *http.Request)
 
 func (h *DogHandler) HandleDeleteDogByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DogHandler HandleDeleteDogByID")
+	//parse id
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+    if err != nil {
+        fmt.Println(err.Error())
+		w.Write([]byte(err.Error()))
+		return
+    }
+	//del from db
+	err = h.DogRepo.DeleteDogById(r.Context(), id, nil)
+	if err != nil {
+        fmt.Println(err.Error())
+		w.Write([]byte(err.Error()))
+		return
+    }
 }
 
 func (h *DogHandler) HandleSwapDogNameByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DogHandler HandleSwapDogNameByID")
+	
 	//begin txn
-	txn, _ := h.DogRepo.Db.BeginTx(r.Context(), nil)
-
-	txn.Exec("SELECT pg_sleep(10)")
+	txn, _ := h.DogRepo.Db.Begin()
 
 	dog1 := model.Dog{}
 	//update dog
-	h.DogRepo.UpdateDogById(r.Context(), dog1, txn)
+	err := h.DogRepo.UpdateDogById(r.Context(), dog1, txn)
+	if err != nil {
+		txn.Rollback()
+	}
 
 	dog2 := model.Dog{}
 	//update another dog
-	h.DogRepo.UpdateDogById(r.Context(), dog2, txn)
+	err = h.DogRepo.UpdateDogById(r.Context(), dog2, txn)
+	if err != nil {
+		txn.Rollback()
+	}
 	
-	//commit txn
-	txn.Commit()
-	
-	w.Write([]byte("done"))
+	err = txn.Commit()
+
+	w.Write([]byte(err.Error()))
 }

@@ -1,8 +1,15 @@
---psql -U postgres
---\list
+
+docker pull postgres:alpine
+docker run --name postgres -e POSTGRES_PASSWORD=123456 -p 5432:5432 -d postgres:alpine
+
+
+psql -U postgres
+\l
 
 DROP DATABASE IF EXISTS app;
 CREATE DATABASE app;
+
+\c app
 
 DROP TABLE IF EXISTS dogs;
 CREATE TABLE dogs(
@@ -14,8 +21,9 @@ CREATE TABLE dogs(
 );
 
 INSERT INTO dogs("name", breed)
-VALUES ('big', 'fat bear'),
+VALUES ('big', 'fat-bear'),
        ('brown', 'dearling'),
        ('black', 'niggas');
+
 
 SELECT * FROM dogs;

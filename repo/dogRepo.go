@@ -13,7 +13,6 @@ type DogRepo struct {
 }
 
 func (r *DogRepo) CreateDog(ctx context.Context, d model.Dog, db util.DbExecutor) error {
-	fmt.Println("DogRepo CreateDog")
 	if db == nil {
 		db = r.Db	
 	}
@@ -22,8 +21,7 @@ func (r *DogRepo) CreateDog(ctx context.Context, d model.Dog, db util.DbExecutor
 	return err
 }
 
-func (r *DogRepo) GetAllDog(ctx context.Context, exe util.DbExecutor) error {
-	fmt.Println("DogRepo GetAllDog")
+func (r *DogRepo) GetAllDog(ctx context.Context, db util.DbExecutor) error {
 	return nil
 }
 
@@ -31,15 +29,16 @@ func (r *DogRepo) GetDogById(ctx context.Context, id int, db util.DbQuerist) (mo
 	if db == nil {
 		db = r.Db	
 	}
-	fmt.Println("DogRepo GetDogById")
-	sql := fmt.Sprintf("SELECT * FROM dogs WHERE id = %d;", id)
-	_, err := db.QueryContext(ctx, sql)
+	
+	sql := fmt.Sprintf("SELECT id, name, breed, created_at, updated_at FROM dogs WHERE id = '%d';", id)
+	row := db.QueryRowContext(ctx, sql)
+	
 	dog := model.Dog{}
+	err := row.Scan(&dog.Id, &dog.Name, &dog.Breed, &dog.CreatedAt, &dog.UpdatedAt)
 	return dog, err
 }
 
 func (r *DogRepo) UpdateDogById(ctx context.Context , d model.Dog, db util.DbExecutor) error {
-	fmt.Println("DogRepo UpdateDogById")
 	if db == nil {
 		db = r.Db	
 	}
@@ -55,11 +54,10 @@ func (r *DogRepo) UpdateDogById(ctx context.Context , d model.Dog, db util.DbExe
 }
 
 func (r *DogRepo) DeleteDogById(ctx context.Context, id int, db util.DbExecutor) error {
-	fmt.Println("DogRepo DeleteDogById")
 	if db == nil {
 		db = r.Db	
 	}
-	sql := fmt.Sprintf("DELETE FROM dogs WHERE id = %d", id)
+	sql := fmt.Sprintf("DELETE FROM dogs WHERE id = '%d'", id)
 	_, err := db.ExecContext(ctx, sql)
 	return err
 }
