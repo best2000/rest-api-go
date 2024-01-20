@@ -14,6 +14,8 @@ type DogHandler struct{
 
 func (h *DogHandler) HandleCreateDog(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DogHandler HandleCreateDog")
+	// dog := model.Dog{}
+	// err := h.DogRepo.CreateDog(r.Context(), dog, nil)
 }
 
 func (h *DogHandler) HandleListAllDog(w http.ResponseWriter, r *http.Request) {
@@ -22,10 +24,15 @@ func (h *DogHandler) HandleListAllDog(w http.ResponseWriter, r *http.Request) {
 
 func (h *DogHandler) HandleGetDogByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DogHandler HandleGetDogByID")
+	// var id int
+	// dog, err := h.DogRepo.GetDogById(r.Context(), id, nil)
+	
 }
 
 func (h *DogHandler) HandleUpdateDogByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DogHandler HandleUpdateDogByID")
+	dog := model.Dog{}
+	h.DogRepo.UpdateDogById(r.Context(), dog, nil)
 }
 
 func (h *DogHandler) HandleDeleteDogByID(w http.ResponseWriter, r *http.Request) {

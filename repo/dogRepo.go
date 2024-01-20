@@ -27,7 +27,7 @@ func (r *DogRepo) GetAllDog(ctx context.Context, exe util.DbExecutor) error {
 	return nil
 }
 
-func (r *DogRepo) GetDogById(ctx context.Context, id uint32, db util.DbQuerist) (model.Dog, error) {
+func (r *DogRepo) GetDogById(ctx context.Context, id int, db util.DbQuerist) (model.Dog, error) {
 	if db == nil {
 		db = r.Db	
 	}
@@ -54,7 +54,7 @@ func (r *DogRepo) UpdateDogById(ctx context.Context , d model.Dog, db util.DbExe
 	return err
 }
 
-func (r *DogRepo) DeleteDogById(ctx context.Context, id uint32, db util.DbExecutor) error {
+func (r *DogRepo) DeleteDogById(ctx context.Context, id int, db util.DbExecutor) error {
 	fmt.Println("DogRepo DeleteDogById")
 	if db == nil {
 		db = r.Db	

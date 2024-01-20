@@ -17,3 +17,5 @@ INSERT INTO dogs("name", breed)
 VALUES ('big', 'fat bear'),
        ('brown', 'dearling'),
        ('black', 'niggas');
+
+SELECT * FROM dogs;
