@@ -24,7 +24,6 @@ func NewPostgresDatabase(cfg config.Config) *PostgresDb {
 		panic(err)
 	}
 
-	fmt.Println("ping to db.")
 	err = db.Ping()
 	if err != nil {
 		panic(err)
