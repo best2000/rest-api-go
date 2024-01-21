@@ -12,11 +12,11 @@ type DogRepo struct {
 	Db *sql.DB
 }
 
-func (r *DogRepo) CreateDog(ctx context.Context, d model.Dog, db util.DbExecutor) error {
+func (r *DogRepo) CreateDog(ctx context.Context, d model.DogCreateReq, db util.DbExecutor) error {
 	if db == nil {
 		db = r.Db	
 	}
-	sql := fmt.Sprintf("INSERT INTO dogs(name, breed) VALUES (%s, %s);", d.Name, d.Breed)
+	sql := fmt.Sprintf("INSERT INTO dogs (name, breed) VALUES ('%s', '%s');", d.Name, d.Breed)
 	_, err := db.ExecContext(ctx, sql)
 	return err
 }

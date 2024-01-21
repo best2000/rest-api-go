@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"net/http"
 
+	application "github.com/best2000/rest-api-go/app"
 	"github.com/best2000/rest-api-go/config"
 	"github.com/best2000/rest-api-go/db"
 	"github.com/best2000/rest-api-go/handler"
 	"github.com/best2000/rest-api-go/repo"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-delve/delve/service/api"
+	"golang.org/x/tools/cmd/getgo/server"
 )
 
 func main() {
@@ -20,24 +23,17 @@ func main() {
 	fmt.Println("connected to database.")
 
 
-	//add middlewear pre/post handle, logger, request id 
-	//init router
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Use(middleware.Heartbeat("/"))
+	//pagination
+	//add middleware pre/post handle, logger, request id 
+	//error/routes/logs middleware management
+	//graceful shutdown
+
 	
 
-	dogRepo := repo.DogRepo{Db: db}
-	dogHandler := handler.DogHandler{DogRepo: &dogRepo}
-	r.Route("/dogs", func(r chi.Router) {
-		r.Get("/{id}", dogHandler.HandleGetDogByID)
-		r.Get("/", dogHandler.HandleListAllDog)
-		r.Post("/", dogHandler.HandleCreateDog)
-		r.Patch("/{id}", dogHandler.HandleUpdateDogByID)
-		r.Delete("/{id}", dogHandler.HandleDeleteDogByID)
-	})
-
 	fmt.Println("start server "+config.App.Addr)
+	
+	//load route
+	r := api.NewChiRouter(db)
 
 	s := &http.Server{
 		Addr:    config.App.Addr,

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 )
 
+//using in repo to interchangeable between 'sql.DB' and 'sql.Tx'
 type DbExecutor interface {
 	ExecContext(ctx context.Context, query string, args ...any) (sql.Result, error)
 }

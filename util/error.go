@@ -2,7 +2,6 @@ package util
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 )
 
@@ -17,28 +16,54 @@ type ApiError struct {
 	BussinessError error
 }
 
-//implement 'error' interface
-func (e ApiError) Error() string {
-	return fmt.Sprintf("Bussiness Error: %s \nApp Error: %s", 
-	e.BussinessError.Error(), e.AppError.Error())
+func NewApiError(appErr error, busErr error) ApiError{
+	return ApiError{
+		AppError: appErr,
+		BussinessError: busErr,
+	}
 }
 
+//implement 'error' interface
+func (e ApiError) Error() string {
+	errString := "Error: "
+	if e.BussinessError != nil {
+		errString += e.BussinessError.Error()
+	} 
+	errString += ", " 
+	if e.AppError != nil {
+		errString += e.AppError.Error()
+	} 
+	return errString
+}
+//+unwrap method
+// func (e ApiError) Unwrap() error {
+// 	return e.AppError
+// }
+
 type ApiErrorResponse struct {
-	Status int
+	Status int 
 	Message string
 }
 
-func MatchApiErrorResponse(e error) ApiErrorResponse {
-	var apiErr ApiError = ApiError{}
-	var	apiErrRes ApiErrorResponse = ApiErrorResponse{}
-	if errors.As(e, &apiErr) {
-		apiErrRes.Message = apiErr.Error()
-		switch apiErr.BussinessError {
+func (e ApiError) PrepareErrorResponse(w http.ResponseWriter) {
+	var	(
+		status int
+		message string
+	)
+	message = e.Error()
+	if e.BussinessError != nil {
+		switch e.BussinessError {
 		case ErrBadRequest:
-			apiErrRes.Status = http.StatusBadRequest
+			status = http.StatusBadRequest
 		case ErrInternalError:
-			apiErrRes.Status = http.StatusBadRequest
+			status = http.StatusInternalServerError
 		}
 	}
-	return apiErrRes
+	res := ApiErrorResponse{
+		Status: status,
+		Message: message,
+	}
+
+	w.WriteHeader(res.Status)
+	w.Write([]byte(res.Message))
 }
