@@ -20,7 +20,7 @@ func NewChiRouter(db *sql.DB) chi.Router {
 
 	dogRepo := repo.DogRepo{Db: db}
 	dogHandler := handler.DogHandler{DogRepo: &dogRepo}
-	r.Route("/dogs", func(r chi.Router) {
+	// r.With(mid.AuthMid).Route("/dogs", func(r chi.Router) {
 		r.Get("/{id}", dogHandler.HandleGetDogByID)
 		r.Get("/", dogHandler.HandleListAllDog)
 		r.Post("/", dogHandler.HandleCreateDog)
