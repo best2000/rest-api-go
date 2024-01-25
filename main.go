@@ -2,34 +2,35 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 
-	"github.com/best2000/rest-api-go/api"
 	"github.com/best2000/rest-api-go/config"
 	"github.com/best2000/rest-api-go/db"
-	logging "github.com/best2000/rest-api-go/log"
 )
 
 func main() {
-	//logger setup
-	log := logging.NewLogger(log.Ldate | log.Ltime | log.Lshortfile)
-	
+	//logger basic setup
+	log.SetOutput(os.Stdout)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)	
+
 
 	config := config.GetConfig()
 
 	db := database.NewPostgresDatabase(*config).Db
 	defer db.Close()
-	log.Info.Println("connected to database.")
+	slog.Info("connected to database.")
 
 	//pagination
 	//add middleware pre/post handle, logger, request id
 	//error/routes/logs middleware management
 	//graceful shutdown
 
-	log.Info.Printf("start server at %s.\n", config.App.Addr)
+	slog.Info("start server at "+ config.App.Addr + ".")
 
 	//load route
-	r := api.NewChiRouter(db, log)
+	r := NewChiRouter(db)
 
 	s := &http.Server{
 		Addr:    config.App.Addr,
@@ -38,7 +39,7 @@ func main() {
 
 	go s.ListenAndServe()
 
-	log.Info.Println(`
+	slog.Info(`
  ______     ______     ______     ______      ______     ______   __      
 /\  == \   /\  ___\   /\  ___\   /\__  _\    /\  __ \   /\  == \ /\ \     Nothing Special
 \ \  __<   \ \  __\   \ \___  \  \/_/\ \/    \ \  __ \  \ \  _-/ \ \ \    Just a Prototype

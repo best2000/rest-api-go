@@ -1,10 +1,12 @@
 package database
 
 import (
-	"fmt"
 	"database/sql"
-	_ "github.com/lib/pq"
+	"fmt"
+	"log/slog"
+
 	"github.com/best2000/rest-api-go/config"
+	_ "github.com/lib/pq"
 )
 
 type PostgresDb struct {
@@ -17,7 +19,7 @@ func NewPostgresDatabase(cfg config.Config) *PostgresDb {
 		cfg.Db.User, cfg.Db.Password, cfg.Db.Host, cfg.Db.Port, cfg.Db.DBName,
 	)
 
-	fmt.Println("db connection string: "+psqlInfo)
+	slog.Info("db connection string: "+psqlInfo)
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
