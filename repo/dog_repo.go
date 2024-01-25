@@ -4,15 +4,19 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
+	logging "github.com/best2000/rest-api-go/log"
 	"github.com/best2000/rest-api-go/model"
 	"github.com/best2000/rest-api-go/util"
 )
 
 type DogRepo struct {
 	Db *sql.DB
+	Log *logging.Logger
 }
 
 func (r *DogRepo) CreateDog(ctx context.Context, d model.DogCreateReq, db util.DbExecutor) error {
+	
 	if db == nil {
 		db = r.Db	
 	}
