@@ -12,15 +12,11 @@ import (
 
 func main() {
 	//logger setup
-	// opts := &slog.HandlerOptions{
-    // AddSource: true,
-    // Level:     slog.LevelDebug,
-	// }
-	// var handler slog.Handler = slog.NewTextHandler(os.Stdout, opts)
-	// logger := slog.New(handler)
-	// slog.SetDefault(logger)
 	log.SetOutput(os.Stdout)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)	
+	logger := slog.Default()
+	slog.SetDefault(logger)
+	
 
 
 	config := config.GetConfig()
