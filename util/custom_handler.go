@@ -18,7 +18,7 @@ func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		slog.Error(err.Error())
 
-		var busErr BusError
+		var busErr BusinessError
 		//check bussiness error
 		if errors.As(err, &busErr) {
 			//set bussiness error response

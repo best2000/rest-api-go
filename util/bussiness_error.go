@@ -6,22 +6,22 @@ import (
 )
 
 var (
-	ErrInternalError error	= BusError{
+	ErrInternalError error	= BusinessError{
 		BusStatus: 55,
 		HttpStatus: http.StatusInternalServerError,
 		Message: "Internal Server Error",
 	}
-	ErrBadRequest error	= BusError{
+	ErrBadRequest error	= BusinessError{
 		BusStatus: 56,
 		HttpStatus: http.StatusBadRequest,
 		Message: "Bad Request", 
 	}
-	ErrServiceUnavailable error	= BusError{
+	ErrServiceUnavailable error	= BusinessError{
 		BusStatus: 55,
 		HttpStatus: http.StatusServiceUnavailable,
 		Message: "Service Unavailable", 
 	}
-	ErrUnAuthorize error = BusError{
+	ErrUnAuthorize error = BusinessError{
 		BusStatus: 12,
 		HttpStatus: 401,
 		Message: "this user not allow to use this function",
@@ -29,12 +29,12 @@ var (
 )
 
 //implement 'error' interface 
-type BusError struct {
+type BusinessError struct {
 	BusStatus int
 	HttpStatus int 
 	Message string
 }
 
-func (e BusError) Error() string {
+func (e BusinessError) Error() string {
 	return fmt.Sprintf("%d : %s", e.BusStatus, e.Message)
 }
