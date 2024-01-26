@@ -1,28 +1,40 @@
 package util
 
 import (
+	"fmt"
 	"net/http"
 )
 
 var (
-	ErrInternalError error	= ApiError{
+	ErrInternalError error	= BusError{
 		BusStatus: 55,
 		HttpStatus: http.StatusInternalServerError,
 		Message: "Internal Server Error",
 	}
-	ErrBadRequest error	= ApiError{
-		BusStatus: 55,
-		HttpStatus: http.StatusInternalServerError,
+	ErrBadRequest error	= BusError{
+		BusStatus: 56,
+		HttpStatus: http.StatusBadRequest,
 		Message: "Bad Request", 
+	}
+	ErrServiceUnavailable error	= BusError{
+		BusStatus: 55,
+		HttpStatus: http.StatusServiceUnavailable,
+		Message: "Service Unavailable", 
+	}
+	ErrUnAuthorize error = BusError{
+		BusStatus: 12,
+		HttpStatus: 401,
+		Message: "this user not allow to use this function",
 	}
 )
 
-type ApiError struct {
+//implement 'error' interface 
+type BusError struct {
 	BusStatus int
 	HttpStatus int 
 	Message string
 }
 
-func (e ApiError) Error () string {
-	return string(e.BusStatus) + " " + e.Message
+func (e BusError) Error() string {
+	return fmt.Sprintf("%d : %s", e.BusStatus, e.Message)
 }

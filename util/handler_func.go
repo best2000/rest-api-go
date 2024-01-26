@@ -18,21 +18,21 @@ func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		slog.Error(err.Error())
 
-		//prepare error response
-		//extract ApiError from error
-		var apiErr ApiError
-		if errors.As(err, &apiErr) {
-			//ApiError type
-			w.WriteHeader(apiErr.HttpStatus)
-			w.Write([]byte(apiErr.Error()))
+		var busErr BusError
+		//check bussiness error
+		if errors.As(err, &busErr) {
+			//set bussiness error response
+			w.WriteHeader(busErr.HttpStatus)
+			w.Write([]byte(busErr.Error()))
 		} else {
 			//std error
+			//set 500 Internal Server Error 
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(err.Error()))
 		}
 		return
 	} else {
-		//normal case, no error
+		//set 200 OK
 		w.WriteHeader(http.StatusOK)
 	}
 }

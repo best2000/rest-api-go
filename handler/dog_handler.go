@@ -2,8 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"errors"
-	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -18,8 +16,6 @@ type DogHandler struct {
 }
 
 func (h *DogHandler) CreateDog(w util.ResponseWriter, r *http.Request) error {
-	slog.Info("DogHandler HandleCreateDog")
-
 	var dog model.DogCreateReq
 	err := json.NewDecoder(r.Body).Decode(&dog)
 	if err != nil {
@@ -34,14 +30,12 @@ func (h *DogHandler) CreateDog(w util.ResponseWriter, r *http.Request) error {
 }
 
 func (h *DogHandler) ListAllDog(w util.ResponseWriter, r *http.Request) error {
-	slog.Info("DogHandler HandleListAllDog")
 	h.DogRepo.GetAllDog(r.Context(), nil)
-	w.Write([]byte("lol"))
-	return nil
+	
+	return util.ErrServiceUnavailable
 }
 
 func (h *DogHandler) GetDogByID(w util.ResponseWriter, r *http.Request) error {
-	slog.Info("DogHandler HandleGetDogByID")
 	//parse id
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -52,26 +46,17 @@ func (h *DogHandler) GetDogByID(w util.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	//encode json
-	j, err := json.Marshal(dog)
-	if err != nil {
-		return err
-	}
-	//write body
-	w.Write(j)
-	
-	return errors.New("im just a failure")
+
+	return w.WriteAsJson(dog)
 }
 
 func (h *DogHandler) UpdateDogByID(w util.ResponseWriter, r *http.Request) error {
-	slog.Info("DogHandler HandleUpdateDogByID")
 	dog := model.Dog{}
 	h.DogRepo.UpdateDogById(r.Context(), dog, nil)
 	return nil
 }
 
 func (h *DogHandler) DeleteDogByID(w util.ResponseWriter, r *http.Request) error {
-	slog.Info("DogHandler HandleDeleteDogByID")
 	//parse id
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
