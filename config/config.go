@@ -26,7 +26,7 @@ type (
 	}
 )
 
-func GetConfig() *Config {
+func Load() *Config {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./")

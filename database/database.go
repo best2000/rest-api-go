@@ -13,7 +13,7 @@ type PostgresDb struct {
 	Db *sql.DB
 }
 
-func NewPostgresDatabase(cfg config.Config) *PostgresDb {
+func New(cfg config.Config) *PostgresDb {
 	log := logger.Get()
 
 	psqlInfo := fmt.Sprintf(

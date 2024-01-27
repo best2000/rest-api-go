@@ -5,12 +5,15 @@ import (
 	"net/http"
 
 	"github.com/best2000/rest-api-go/config"
-	"github.com/best2000/rest-api-go/db"
+	"github.com/best2000/rest-api-go/database"
 	"github.com/best2000/rest-api-go/logger"
 )
 
-
-
+//TODO
+//pagination
+//indepth middleware
+//graceful shutdown
+	
 func main() {
 	//zap logger setup
 	log := logger.New("dev")
@@ -19,18 +22,12 @@ func main() {
 	log.Info("initializing server...")
 
 	//get config
-	config := config.GetConfig()
+	config := config.Load()
 
 	//connect db
-	db := database.NewPostgresDatabase(*config).Db
+	db := database.New(*config).Db
 	defer db.Close()
 	log.Info("connected to database.")
-
-	//TODO
-	//pagination
-	//add middleware pre/post handle, logger, request id
-	//error/routes/logs middleware management
-	//graceful shutdown
 
 	log.Info(fmt.Sprintf("listening on %s.",config.App.Addr))
 
