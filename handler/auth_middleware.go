@@ -8,7 +8,7 @@ import (
 
 func AuthMid(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log := logger.Get()
+		log := logger.FromCtx(r.Context())
 
 		log.Info("in auth middleware")
 

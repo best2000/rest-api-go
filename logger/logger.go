@@ -1,9 +1,12 @@
 package logger
 
 import (
+	"context"
+	"sync"
+
+	"github.com/best2000/rest-api-go/value"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"sync"
 )
 
 // global logger
@@ -67,4 +70,13 @@ func New(env string) *zap.Logger {
 
 func Get() *zap.Logger {
 	return logger
+}
+
+func FromCtx(ctx context.Context) *zap.Logger {
+    l, isType := ctx.Value(value.LoggerCtxKey).(*zap.Logger); 
+	if isType {
+        return l
+    } else {
+		return Get()
+	}
 }

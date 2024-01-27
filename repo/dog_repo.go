@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/best2000/rest-api-go/logger"
 	"github.com/best2000/rest-api-go/model"
 	"github.com/best2000/rest-api-go/util"
-	"go.uber.org/zap"
 )
 
 type DogRepo struct {
@@ -25,7 +25,7 @@ func (r *DogRepo) CreateDog(ctx context.Context, d model.DogCreateReq, db util.D
 }
 
 func (r *DogRepo) GetAllDog(ctx context.Context, db util.DbQuerist) error {
-	log := ctx.Value("logger").(*zap.Logger)
+	log := logger.FromCtx(ctx)
 	if db == nil {
 		db = r.Db
 	}

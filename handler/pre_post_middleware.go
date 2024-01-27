@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/best2000/rest-api-go/logger"
+	"github.com/best2000/rest-api-go/value"
 	"github.com/rs/xid"
 	"go.uber.org/zap"
 )
@@ -19,19 +20,23 @@ func PrePost(next http.Handler) http.Handler {
 		ctx, cancel := context.WithTimeout(r.Context(), time.Second*3)
 		defer cancel()
 
-		//generate a correlation ID for the request
-		correlationID := xid.New().String()
+		//get request ID
+		requestId := r.Header.Get(value.RequestIdHeaderKey)
+		if requestId == "" {
+			//generate a request ID for the request
+			requestId = xid.New().String()
+		}
 
-		//add correlation ID header 
-		w.Header().Add("X-Correlation-ID", correlationID)
+		//add request ID header 
+		w.Header().Add(value.RequestIdHeaderKey , requestId)
 
-		//create a child logger from main logger then add the correlation ID to the child
-		reqLogger := logger.Get().With(zap.String(string("correlation_id"), correlationID))
+		//create a child logger from main logger then add the request ID to the child
+		reqLogger := logger.Get().With(zap.String(string(value.RequestIdCtxKey), requestId))
 		//attach logger to context
-		ctx = context.WithValue(ctx, "logger", reqLogger)
+		ctx = context.WithValue(ctx, value.LoggerCtxKey, reqLogger)
 
-		//add X-Correlation-ID to context
-		ctx = context.WithValue(ctx, "correlation_id", correlationID)
+		//add X-Request-ID to context
+		ctx = context.WithValue(ctx, value.RequestIdCtxKey, requestId)
 
 		//attach context it to request
 		next.ServeHTTP(w, r.WithContext(ctx))	//call next handler
