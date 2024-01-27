@@ -9,6 +9,7 @@ import (
 	"github.com/best2000/rest-api-go/repo"
 	"github.com/best2000/rest-api-go/util"
 	"github.com/go-chi/chi/v5"
+	"golang.org/x/exp/slog"
 )
 
 type DogHandler struct {
@@ -30,9 +31,8 @@ func (h *DogHandler) CreateDog(w util.ResponseWriter, r *http.Request) error {
 }
 
 func (h *DogHandler) ListAllDog(w util.ResponseWriter, r *http.Request) error {
-	h.DogRepo.GetAllDog(r.Context(), nil)
-	
-	return util.ErrServiceUnavailable
+	slog.Info("got request id = "+ r.Context().Value("requestId").(string))
+	return h.DogRepo.GetAllDog(r.Context(), nil)
 }
 
 func (h *DogHandler) GetDogByID(w util.ResponseWriter, r *http.Request) error {

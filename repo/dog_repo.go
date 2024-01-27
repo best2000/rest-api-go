@@ -23,8 +23,14 @@ func (r *DogRepo) CreateDog(ctx context.Context, d model.DogCreateReq, db util.D
 	return err
 }
 
-func (r *DogRepo) GetAllDog(ctx context.Context, db util.DbExecutor) error {
-	return nil
+func (r *DogRepo) GetAllDog(ctx context.Context, db util.DbQuerist) error {
+	if db == nil {
+		db = r.Db	
+	}
+	sql := "SELECT pg_sleep(6)"
+	_,  err := r.Db.ExecContext(ctx, sql)
+
+	return err
 }
 
 func (r *DogRepo) GetDogById(ctx context.Context, id int, db util.DbQuerist) (model.Dog, error) {

@@ -12,10 +12,6 @@ func AuthMid(next http.Handler) http.Handler {
 		tkn := r.Header.Get("token")
 		slog.Info("token="+tkn)
 
-		//set ctx timeout
-		// ctx, cancle := context.WithTimeout(r.Context(), time.Millisecond * 1)
-
-		// defer cancle()
 		next.ServeHTTP(w, r)
 	})
 }
