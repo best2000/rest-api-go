@@ -3,9 +3,9 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"log/slog"
 
 	"github.com/best2000/rest-api-go/config"
+	"github.com/best2000/rest-api-go/logger"
 	_ "github.com/lib/pq"
 )
 
@@ -14,12 +14,14 @@ type PostgresDb struct {
 }
 
 func NewPostgresDatabase(cfg config.Config) *PostgresDb {
+	log := logger.Get()
+
 	psqlInfo := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		cfg.Db.User, cfg.Db.Password, cfg.Db.Host, cfg.Db.Port, cfg.Db.DBName,
 	)
 
-	slog.Info("db connection string: "+psqlInfo)
+	log.Info("db connection string: "+psqlInfo)
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {

@@ -1,48 +1,52 @@
 package main
 
 import (
-	"log"
-	"log/slog"
+	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/best2000/rest-api-go/config"
 	"github.com/best2000/rest-api-go/db"
+	"github.com/best2000/rest-api-go/logger"
 )
 
+
+
 func main() {
-	//logger setup
-	log.SetOutput(os.Stdout)
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)	
-	logger := slog.Default()
-	slog.SetDefault(logger)
+	//zap logger setup
+	log := logger.New("dev")
+	defer log.Sync()
 	
+	log.Info("initializing server...")
 
-
+	//get config
 	config := config.GetConfig()
 
+	//connect db
 	db := database.NewPostgresDatabase(*config).Db
 	defer db.Close()
-	slog.Info("connected to database.")
+	log.Info("connected to database.")
 
+	//TODO
 	//pagination
 	//add middleware pre/post handle, logger, request id
 	//error/routes/logs middleware management
 	//graceful shutdown
 
-	slog.Info("start server at "+ config.App.Addr + ".")
+	log.Info(fmt.Sprintf("listening on %s.",config.App.Addr))
 
-	//load route
+	//router setup
 	r := NewChiRouter(db)
 
+	//server setup
 	s := &http.Server{
 		Addr:    config.App.Addr,
 		Handler: r,
 	}
 
+	//start server
 	go s.ListenAndServe()
 
-	slog.Info(`
+	log.Info(`
  ______     ______     ______     ______      ______     ______   __      
 /\  == \   /\  ___\   /\  ___\   /\__  _\    /\  __ \   /\  == \ /\ \     Nothing Special
 \ \  __<   \ \  __\   \ \___  \  \/_/\ \/    \ \  __ \  \ \  _-/ \ \ \    Just a Prototype

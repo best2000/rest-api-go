@@ -9,7 +9,7 @@ import (
 	"github.com/best2000/rest-api-go/repo"
 	"github.com/best2000/rest-api-go/util"
 	"github.com/go-chi/chi/v5"
-	"golang.org/x/exp/slog"
+	"go.uber.org/zap"
 )
 
 type DogHandler struct {
@@ -31,7 +31,11 @@ func (h *DogHandler) CreateDog(w util.ResponseWriter, r *http.Request) error {
 }
 
 func (h *DogHandler) ListAllDog(w util.ResponseWriter, r *http.Request) error {
-	slog.Info("got request id = "+ r.Context().Value("requestId").(string))
+	//get logger from context
+	log := r.Context().Value("logger").(*zap.Logger) 
+
+	log.Info("failing...")
+	
 	return h.DogRepo.GetAllDog(r.Context(), nil)
 }
 

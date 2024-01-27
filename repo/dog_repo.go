@@ -7,6 +7,7 @@ import (
 
 	"github.com/best2000/rest-api-go/model"
 	"github.com/best2000/rest-api-go/util"
+	"go.uber.org/zap"
 )
 
 type DogRepo struct {
@@ -14,9 +15,9 @@ type DogRepo struct {
 }
 
 func (r *DogRepo) CreateDog(ctx context.Context, d model.DogCreateReq, db util.DbExecutor) error {
-	
+
 	if db == nil {
-		db = r.Db	
+		db = r.Db
 	}
 	sql := fmt.Sprintf("INSERT INTO dogs (name, breed) VALUES ('%s', '%s');", d.Name, d.Breed)
 	_, err := db.ExecContext(ctx, sql)
@@ -24,31 +25,36 @@ func (r *DogRepo) CreateDog(ctx context.Context, d model.DogCreateReq, db util.D
 }
 
 func (r *DogRepo) GetAllDog(ctx context.Context, db util.DbQuerist) error {
+	log := ctx.Value("logger").(*zap.Logger)
 	if db == nil {
-		db = r.Db	
+		db = r.Db
 	}
-	sql := "SELECT pg_sleep(6)"
-	_,  err := r.Db.ExecContext(ctx, sql)
 
+	sql := "SELECT pg_sleep(6);"
+	log.Info("sql: " + sql)
+	
+	log.Info("I said failing...")
+
+	_, err := r.Db.ExecContext(ctx, sql)
 	return err
 }
 
 func (r *DogRepo) GetDogById(ctx context.Context, id int, db util.DbQuerist) (model.Dog, error) {
 	if db == nil {
-		db = r.Db	
+		db = r.Db
 	}
-	
+
 	sql := fmt.Sprintf("SELECT id, name, breed, created_at, updated_at FROM dogs WHERE id = '%d';", id)
 	row := db.QueryRowContext(ctx, sql)
-	
+
 	dog := model.Dog{}
 	err := row.Scan(&dog.Id, &dog.Name, &dog.Breed, &dog.CreatedAt, &dog.UpdatedAt)
 	return dog, err
 }
 
-func (r *DogRepo) UpdateDogById(ctx context.Context , d model.Dog, db util.DbExecutor) error {
+func (r *DogRepo) UpdateDogById(ctx context.Context, d model.Dog, db util.DbExecutor) error {
 	if db == nil {
-		db = r.Db	
+		db = r.Db
 	}
 	sql := fmt.Sprintf(`
 		UPDATE dogs 
@@ -63,7 +69,7 @@ func (r *DogRepo) UpdateDogById(ctx context.Context , d model.Dog, db util.DbExe
 
 func (r *DogRepo) DeleteDogById(ctx context.Context, id int, db util.DbExecutor) error {
 	if db == nil {
-		db = r.Db	
+		db = r.Db
 	}
 	sql := fmt.Sprintf("DELETE FROM dogs WHERE id = '%d'", id)
 	_, err := db.ExecContext(ctx, sql)
