@@ -26,8 +26,7 @@ func PrePost(next http.Handler) http.Handler {
 
 		//get request ID
 		requestId := r.Header.Get(value.RequestIdHeaderKey)
-		if requestId == "" {
-			//generate a request ID for the request
+		if requestId == "" {	//generate a request ID for the request
 			requestId = xid.New().String()
 		}
 		w.Header().Add(value.RequestIdHeaderKey, requestId)	//add request ID header
@@ -45,6 +44,7 @@ func PrePost(next http.Handler) http.Handler {
 		//create a child logger from main logger then add the addtional info of request
 		log = log.With(
 			zap.String(string(value.RequestIdKey), requestId),
+			zap.Any("request_uri", r.RequestURI),
 			zap.Any(value.ApiEndpointFlagsKey, endpointFlags),
 		)
 
@@ -67,12 +67,13 @@ func PrePost(next http.Handler) http.Handler {
 			zap.String("http", r.Proto),
 			zap.String("host", r.Host),
 			zap.String("method", r.Method),
-			zap.String("url", r.URL.Path),
+			// zap.String("request_uri", r.RequestURI),
+			zap.String("query_string", r.URL.RawQuery),
 			zap.String("content_type", r.Header.Get("Content-Type")),
 			zap.String("body", string(body)))
 
-		//attach context it to request
-		next.ServeHTTP(w, r.WithContext(ctx)) //call next handler
+		//attach context to request, call next handler
+		next.ServeHTTP(w, r.WithContext(ctx)) 
 		//...
 
 		//post handle...

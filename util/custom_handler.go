@@ -34,8 +34,16 @@ func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(err.Error()))
 		}
 		return
-	} else {
-		//set 200 OK
-		w.WriteHeader(http.StatusOK)
+	} 
+}
+
+//for using as 'http.HandlerFunc'
+func HandlerFuncWrapper(f HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		//call main handler
+		err := f(ResponseWriter{ResponseWriter: w}, r)
+		if err != nil {
+			//error handling...
+		}
 	}
 }

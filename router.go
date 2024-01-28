@@ -27,7 +27,7 @@ func NewChiRouter(db *sql.DB) chi.Router {
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
-	r.Use(middleware.Logger)
+	// r.Use(middleware.Logger)
 	r.Use(handler.PrePost)
 	r.Use(handler.AuthMid)
 	r.Use(middleware.Heartbeat("/"))

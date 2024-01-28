@@ -17,7 +17,7 @@ type ApiEndpointFlags struct {
 
 var apiEndpointFlagsMap = map[string]ApiEndpointFlags{
 	"GET/dogs/{?}": ApiEndpointFlags{
-		Auth:         false,
+		Auth:         true,
 		UserAuditLog: false,
 		PiiLog:       false,
 		SecurityLog:  false,
@@ -78,7 +78,7 @@ func GetApiEndpointFlags(r *http.Request) (ApiEndpointFlags, error) {
 	return ApiEndpointFlags{}, errors.New("no matching api endpoint")
 }
 
-func FromCtx(ctx context.Context) ApiEndpointFlags {
+func GetApiEndpointFlagsFromCtx(ctx context.Context) ApiEndpointFlags {
 	l, isType := ctx.Value(ApiEndpointFlagsKey).(ApiEndpointFlags)
 	if isType {
 		return l
