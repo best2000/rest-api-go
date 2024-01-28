@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"time"
@@ -15,6 +16,7 @@ import (
 
 func PrePost(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log := logger.Get()
 		//pre handle.....
 		start := time.Now()
 
@@ -28,14 +30,27 @@ func PrePost(next http.Handler) http.Handler {
 			//generate a request ID for the request
 			requestId = xid.New().String()
 		}
+		w.Header().Add(value.RequestIdHeaderKey, requestId)	//add request ID header
 
-		//add request ID header
-		w.Header().Add(value.RequestIdHeaderKey, requestId)
+		//get api endpoint flags (auth, perm, logs)
+		endpointFlags, err := value.GetApiEndpointFlags(r)
+		if err != nil {
+			err := errors.New("api endpoint not implemented")
+			log.Error("no matching api endpoint", zap.Error(err))
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte("404 Not Found"))
+			return
+		}
 
-		//create a child logger from main logger then add the request ID to the child
-		log := logger.Get().With(zap.String(string(value.RequestIdCtxKey), requestId))
-		ctx = context.WithValue(ctx, value.LoggerCtxKey, log)          //attach logger to context
-		ctx = context.WithValue(ctx, value.RequestIdCtxKey, requestId) //add X-Request-ID to context
+		//create a child logger from main logger then add the addtional info of request
+		log = log.With(
+			zap.String(string(value.RequestIdKey), requestId),
+			zap.Any(value.ApiEndpointFlagsKey, endpointFlags),
+		)
+
+		ctx = context.WithValue(ctx, value.LoggerKey, log)          //attach logger to context
+		ctx = context.WithValue(ctx, value.RequestIdKey, requestId) //add X-Request-ID to context
+		ctx = context.WithValue(ctx, value.ApiEndpointFlagsKey, endpointFlags) //add Api endpoint flags to context
 
 		//read request body for logging
 		body, err := io.ReadAll(r.Body)
@@ -48,11 +63,11 @@ func PrePost(next http.Handler) http.Handler {
 		r.Body = io.NopCloser(bytes.NewBuffer(body)) // Replace the body with a new reader after reading from the original
 
 		//log request info
-		log.Info("HTTP request info", 
-			zap.String("http",r.Proto),
-			zap.String("host",r.Host), 
-			zap.String("method",r.Method), 
-			zap.String("url",r.URL.Path), 
+		log.Info("HTTP request info",
+			zap.String("http", r.Proto),
+			zap.String("host", r.Host),
+			zap.String("method", r.Method),
+			zap.String("url", r.URL.Path),
 			zap.String("content_type", r.Header.Get("Content-Type")),
 			zap.String("body", string(body)))
 

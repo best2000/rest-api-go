@@ -73,7 +73,7 @@ func Get() *zap.Logger {
 }
 
 func FromCtx(ctx context.Context) *zap.Logger {
-    l, isType := ctx.Value(value.LoggerCtxKey).(*zap.Logger); 
+    l, isType := ctx.Value(value.LoggerKey).(*zap.Logger); 
 	if isType {
         return l
     } else {

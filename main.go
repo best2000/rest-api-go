@@ -11,8 +11,8 @@ import (
 
 //TODO
 //pagination
-//indepth middleware
 //graceful shutdown
+//path check in middleware to auth or log/audit/pii
 	
 func main() {
 	//zap logger setup
