@@ -1,4 +1,5 @@
 app:
+  env: dev 
   server:
     addr: :8080
   

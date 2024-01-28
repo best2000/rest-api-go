@@ -12,6 +12,7 @@ type (
 	}
 
 	App struct {
+		Env string
 		Addr string
 	}
 
@@ -38,6 +39,7 @@ func Load() *Config {
 
 	return &Config{
 		App: App{
+			Env: viper.GetString("app.env"),
 			Addr: viper.GetString("app.server.addr"),
 		},
 		Db: Db{

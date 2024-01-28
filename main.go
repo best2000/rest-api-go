@@ -12,17 +12,16 @@ import (
 //TODO
 //pagination
 //graceful shutdown
-//path check in middleware to auth or log/audit/pii
 	
 func main() {
-	//zap logger setup
-	log := logger.New("dev")
-	defer log.Sync()
-	
-	log.Info("initializing server...")
-
 	//get config
 	config := config.Load()
+
+	//zap logger setup
+	log := logger.New(config.App.Env)
+	defer log.Sync()
+
+	log.Info("initializing server...")
 
 	//connect db
 	db := database.New(*config).Db
