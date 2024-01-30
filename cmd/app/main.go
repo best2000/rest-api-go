@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/best2000/rest-api-go/alt/internal/router"
 	"github.com/best2000/rest-api-go/config"
 	"github.com/best2000/rest-api-go/database"
 	"github.com/best2000/rest-api-go/logger"
@@ -31,7 +32,7 @@ func main() {
 	log.Info(fmt.Sprintf("listening on %s.",config.App.Addr))
 
 	//router setup
-	r := NewChiRouter(db)
+	r := router.NewChiRouter(db)
 
 	//server setup
 	s := &http.Server{

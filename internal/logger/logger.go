@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/best2000/rest-api-go/value"
+	"github.com/best2000/rest-api-go/internal/value"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

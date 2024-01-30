@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/best2000/rest-api-go/config"
+	"github.com/best2000/rest-api-go/internal/config"
 	"github.com/best2000/rest-api-go/logger"
 	_ "github.com/lib/pq"
 )
