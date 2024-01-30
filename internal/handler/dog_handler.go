@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/best2000/rest-api-go/logger"
-	"github.com/best2000/rest-api-go/model"
-	"github.com/best2000/rest-api-go/repo"
-	"github.com/best2000/rest-api-go/util"
+	"github.com/best2000/rest-api-go/internal/logger"
+	"github.com/best2000/rest-api-go/internal/model"
+	"github.com/best2000/rest-api-go/internal/repo"
+	"github.com/best2000/rest-api-go/internal/util"
 	"github.com/go-chi/chi/v5"
 )
 

@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	// "time"
 
-	"github.com/best2000/rest-api-go/handler"
-	"github.com/best2000/rest-api-go/repo"
-	"github.com/best2000/rest-api-go/util"
+	"github.com/best2000/rest-api-go/internal/handler"
+	"github.com/best2000/rest-api-go/internal/repo"
+	"github.com/best2000/rest-api-go/internal/util"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"

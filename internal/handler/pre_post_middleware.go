@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/best2000/rest-api-go/logger"
-	"github.com/best2000/rest-api-go/value"
+	"github.com/best2000/rest-api-go/internal/logger"
+	"github.com/best2000/rest-api-go/internal/value"
 	"github.com/rs/xid"
 	"go.uber.org/zap"
 )

@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/best2000/rest-api-go/logger"
-	"github.com/best2000/rest-api-go/value"
+	"github.com/best2000/rest-api-go/internal/logger"
+	"github.com/best2000/rest-api-go/internal/value"
 	"go.uber.org/zap"
 )
 

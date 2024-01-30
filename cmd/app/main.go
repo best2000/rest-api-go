@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/best2000/rest-api-go/alt/internal/router"
-	"github.com/best2000/rest-api-go/config"
-	"github.com/best2000/rest-api-go/database"
-	"github.com/best2000/rest-api-go/logger"
+	"github.com/best2000/rest-api-go/internal/config"
+	"github.com/best2000/rest-api-go/internal/database"
+	"github.com/best2000/rest-api-go/internal/logger"
+	"github.com/best2000/rest-api-go/internal/router"
 )
 
 //TODO

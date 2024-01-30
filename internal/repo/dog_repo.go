@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/best2000/rest-api-go/logger"
-	"github.com/best2000/rest-api-go/model"
-	"github.com/best2000/rest-api-go/util"
+	"github.com/best2000/rest-api-go/internal/logger"
+	"github.com/best2000/rest-api-go/internal/model"
+	"github.com/best2000/rest-api-go/internal/util"
 )
 
 type DogRepo struct {
