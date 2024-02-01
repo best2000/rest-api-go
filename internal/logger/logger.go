@@ -4,7 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/best2000/rest-api-go/internal/value"
+	"rest-api/internal/value"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -73,10 +74,10 @@ func Get() *zap.Logger {
 }
 
 func FromCtx(ctx context.Context) *zap.Logger {
-    l, isType := ctx.Value(value.LoggerKey).(*zap.Logger); 
+	l, isType := ctx.Value(value.LoggerKey).(*zap.Logger)
 	if isType {
-        return l
-    } else {
+		return l
+	} else {
 		return Get()
 	}
 }

@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/best2000/rest-api-go/internal/config"
-	"github.com/best2000/rest-api-go/internal/logger"
+	"rest-api/internal/config"
+	"rest-api/internal/logger"
+
 	_ "github.com/lib/pq"
 )
 
@@ -21,7 +22,7 @@ func New(cfg config.Config) *PostgresDb {
 		cfg.Db.User, cfg.Db.Password, cfg.Db.Host, cfg.Db.Port, cfg.Db.DBName,
 	)
 
-	log.Info("db connection string: "+psqlInfo)
+	log.Info("db connection string: " + psqlInfo)
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
@@ -34,4 +35,14 @@ func New(cfg config.Config) *PostgresDb {
 	}
 
 	return &PostgresDb{Db: db}
+}
+
+func (d *PostgresDb) Insert(item interface{}) error {
+	return nil
+}
+func (d *PostgresDb) Get(id int) error {
+	return nil
+}
+func (d *PostgresDb) Update(id int) error {
+	return nil
 }

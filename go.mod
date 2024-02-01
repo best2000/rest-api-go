@@ -1,4 +1,4 @@
-module github.com/best2000/rest-api-go
+module rest-api
 
 go 1.21.5
 

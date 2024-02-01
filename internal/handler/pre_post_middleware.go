@@ -8,8 +8,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/best2000/rest-api-go/internal/logger"
-	"github.com/best2000/rest-api-go/internal/value"
+	"rest-api/internal/logger"
+	"rest-api/internal/value"
+
 	"github.com/rs/xid"
 	"go.uber.org/zap"
 )
@@ -26,10 +27,10 @@ func PrePost(next http.Handler) http.Handler {
 
 		//get request ID
 		requestId := r.Header.Get(value.RequestIdHeaderKey)
-		if requestId == "" {	//generate a request ID for the request
+		if requestId == "" { //generate a request ID for the request
 			requestId = xid.New().String()
 		}
-		w.Header().Add(value.RequestIdHeaderKey, requestId)	//add request ID header
+		w.Header().Add(value.RequestIdHeaderKey, requestId) //add request ID header
 
 		//get api endpoint flags (auth, perm, logs)
 		endpointFlags, err := value.GetApiEndpointFlags(r)
@@ -48,8 +49,8 @@ func PrePost(next http.Handler) http.Handler {
 			zap.Any(value.ApiEndpointFlagsKey, endpointFlags),
 		)
 
-		ctx = context.WithValue(ctx, value.LoggerKey, log)          //attach logger to context
-		ctx = context.WithValue(ctx, value.RequestIdKey, requestId) //add X-Request-ID to context
+		ctx = context.WithValue(ctx, value.LoggerKey, log)                     //attach logger to context
+		ctx = context.WithValue(ctx, value.RequestIdKey, requestId)            //add X-Request-ID to context
 		ctx = context.WithValue(ctx, value.ApiEndpointFlagsKey, endpointFlags) //add Api endpoint flags to context
 
 		//read request body for logging
@@ -73,7 +74,7 @@ func PrePost(next http.Handler) http.Handler {
 			zap.String("body", string(body)))
 
 		//attach context to request, call next handler
-		next.ServeHTTP(w, r.WithContext(ctx)) 
+		next.ServeHTTP(w, r.WithContext(ctx))
 		//...
 
 		//post handle...

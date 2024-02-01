@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/best2000/rest-api-go/internal/config"
-	"github.com/best2000/rest-api-go/internal/database"
-	"github.com/best2000/rest-api-go/internal/logger"
-	"github.com/best2000/rest-api-go/internal/router"
+	"rest-api/internal/config"
+	database "rest-api/internal/db"
+	"rest-api/internal/logger"
+	"rest-api/internal/router"
 )
 
 //TODO
 //pagination
 //graceful shutdown
-	
+
 func main() {
 	//get config
 	config := config.Load()
@@ -29,7 +29,7 @@ func main() {
 	defer db.Close()
 	log.Info("connected to database.")
 
-	log.Info(fmt.Sprintf("listening on %s.",config.App.Addr))
+	log.Info(fmt.Sprintf("listening on %s.", config.App.Addr))
 
 	//router setup
 	r := router.NewChiRouter(db)
