@@ -3,7 +3,6 @@ package handler
 import (
 	"bytes"
 	"context"
-	"errors"
 	"io"
 	"net/http"
 	"time"
@@ -32,26 +31,16 @@ func PrePost(next http.Handler) http.Handler {
 		}
 		w.Header().Add(value.RequestIdHeaderKey, requestId) //add request ID header
 
-		//get api endpoint flags (auth, perm, logs)
-		endpointFlags, err := value.GetApiEndpointFlags(r)
-		if err != nil {
-			err := errors.New("api endpoint not implemented")
-			log.Error("no matching api endpoint", zap.Error(err))
-			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte("404 Not Found"))
-			return
-		}
+		
 
 		//create a child logger from main logger then add the addtional info of request
 		log = log.With(
 			zap.String(string(value.RequestIdKey), requestId),
 			zap.Any("request_uri", r.RequestURI),
-			zap.Any(value.ApiEndpointInfoKey, endpointFlags),
 		)
 
 		ctx = context.WithValue(ctx, value.LoggerKey, log)                     //attach logger to context
 		ctx = context.WithValue(ctx, value.RequestIdKey, requestId)            //add X-Request-ID to context
-		ctx = context.WithValue(ctx, value.ApiEndpointInfoKey, endpointFlags) //add Api endpoint flags to context
 
 		//read request body for logging
 		body, err := io.ReadAll(r.Body)
@@ -61,7 +50,8 @@ func PrePost(next http.Handler) http.Handler {
 			w.Write([]byte(err.Error()))
 			return
 		}
-		r.Body = io.NopCloser(bytes.NewBuffer(body)) // Replace the body with a new reader after reading from the original
+		// Replace the body with a new reader after reading from the original
+		r.Body = io.NopCloser(bytes.NewBuffer(body)) 
 
 		//log request info
 		log.Info("HTTP request info",

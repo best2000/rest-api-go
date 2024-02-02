@@ -51,6 +51,10 @@ var apiEndpointFlagsMap = map[string]ApiEndpointInfo{
 		FunctionCode:	"",
 		UserAuditLogFlag: 	true,
 	},
+	"GET"+"/ping" : ApiEndpointInfo{
+		FunctionCode:	"",
+		UserAuditLogFlag: 	true,
+	},
 }
 
 func GetApiEndpointFlags(r *http.Request) (ApiEndpointInfo, error) {

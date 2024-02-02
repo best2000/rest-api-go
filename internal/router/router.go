@@ -11,7 +11,6 @@ import (
 	"rest-api/internal/util"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"go.uber.org/zap"
 )
@@ -30,19 +29,15 @@ func NewChiRouter(db *sql.DB) chi.Router {
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
-	
+
 	r.Use(handler.PrePost)
-	r.Use(middleware.Heartbeat("/"))
+	r.Use(handler.EndpointInfoMid)
+	r.Use(handler.LogMid)
 
 	// dogRepo := repo.DogRepo{Db: db}
 	// dogHandler := handler.DogHandler{DogRepo: &dogRepo}
-	// r.Route("/dogs", func(r chi.Router) {
-	// 	r.Method("GET", "/{id}", HandlerFunc(middleware.Heartbeat("/")))
-	// 	r.Method("GET", "/", util.HandlerFunc(dogHandler.ListAllDog))
-	// 	r.Method("POST", "/", util.HandlerFunc(dogHandler.CreateDog))
-	// 	r.Method("PATCH", "/{id}", util.HandlerFunc(dogHandler.UpdateDogByID))
-	// 	r.Method("DELETE", "/{id}", util.HandlerFunc(dogHandler.DeleteDogByID))
-	// })
+
+	r.Method("GET", "/ping", HandlerFunc(handler.Ping))
 
 	return r
 }

@@ -24,8 +24,9 @@ func AuthMid(next http.Handler) http.Handler {
 			ctx := context.WithValue(r.Context(), value.UserNameKey, tkn)
 			r = r.WithContext(ctx)
 
+			//replace old ctx logger with new child logger with username attr added
 			logger := logger.FromCtx(r.Context())
-			*logger = *logger.With(zap.String(value.UserNameKey, tkn)) //replace old ctx logger with new child logger with username attr added
+			*logger = *logger.With(zap.String(value.UserNameKey, tkn)) 
 		}
 
 		next.ServeHTTP(w, r)
