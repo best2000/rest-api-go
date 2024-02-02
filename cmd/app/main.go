@@ -5,9 +5,10 @@ import (
 	"net/http"
 
 	"rest-api/internal/config"
-	database "rest-api/internal/db"
+	"rest-api/internal/db"
 	"rest-api/internal/logger"
 	"rest-api/internal/router"
+	"rest-api/internal/token"
 )
 
 //TODO
@@ -23,6 +24,9 @@ func main() {
 	defer log.Sync()
 
 	log.Info("initializing server...")
+
+	//setup jwt auth
+	tkn.New(*config)
 
 	//connect db
 	db, err := database.Connect(*config)
@@ -43,16 +47,5 @@ func main() {
 	}
 
 	//start server
-	go s.ListenAndServe()
-
-	log.Info(`
- ______     ______     ______     ______      ______     ______   __      
-/\  == \   /\  ___\   /\  ___\   /\__  _\    /\  __ \   /\  == \ /\ \     Nothing Special
-\ \  __<   \ \  __\   \ \___  \  \/_/\ \/    \ \  __ \  \ \  _-/ \ \ \    Just a Prototype
- \ \_\ \_\  \ \_____\  \/\_____\    \ \_\     \ \_\ \_\  \ \_\    \ \_\ 
-  \/_/ /_/   \/_____/   \/_____/     \/_/      \/_/\/_/   \/_/     \/_/   EmptyMan_ 
-      `)
-
-	c := make(chan int)
-	<-c
+	s.ListenAndServe()
 }

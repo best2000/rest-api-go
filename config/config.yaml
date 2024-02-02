@@ -1,7 +1,7 @@
 # if yamal key has empty value, it will get value from env instead with acording key name (ex. server.addr => server_addr) 
 app:
-  profile:
-  xxxurl: 
+  profile: dev
+  token-secret: my-secret
 server:
   addr: :8080  
 database:

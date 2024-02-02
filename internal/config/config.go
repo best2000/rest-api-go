@@ -16,7 +16,7 @@ type (
 
 	App struct {
 		Profile string
-		XxxUrl string
+		TokenSecret string
 	}
 
 	Server struct {
@@ -50,7 +50,7 @@ func Load() *Config {
 	return &Config{
 		App: App{
 			Profile: viper.GetString("app.profile"),
-			XxxUrl:  viper.GetString("app.xxxurl"),
+			TokenSecret: viper.GetString("app.token-secret"),
 		},
 		Server: Server{
 			Addr: viper.GetString("server.addr"),
