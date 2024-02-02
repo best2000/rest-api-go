@@ -2,7 +2,7 @@ package logger
 
 import (
 	"context"
-	"sync"
+	"os"
 
 	"rest-api/internal/value"
 
@@ -11,73 +11,66 @@ import (
 )
 
 // global logger
-var logger *zap.Logger
-var onceLogger sync.Once //auto lock
+var Logger *zap.Logger
 
-func New(env string) *zap.Logger {
-	onceLogger.Do(func() {
-		if env == "prod" { //prod env
-			encoderCfg := zap.NewProductionEncoderConfig()
-			encoderCfg.TimeKey = "timestamp"
-			encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
-			encoderCfg.MessageKey = "message"
+func init() {
+	println("initializing main logger...")
+	if os.Getenv("app_profile") == "prod" { //prod env
+		encoderCfg := zap.NewProductionEncoderConfig()
+		encoderCfg.TimeKey = "timestamp"
+		encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
+		encoderCfg.MessageKey = "message"
 
-			config := zap.Config{
-				Level:             zap.NewAtomicLevelAt(zap.InfoLevel),
-				Development:       false,
-				DisableCaller:     false,
-				DisableStacktrace: false,
-				Sampling:          nil,
-				Encoding:          "json",
-				EncoderConfig:     encoderCfg,
-				OutputPaths: []string{
-					"stdout",
-				},
-				ErrorOutputPaths: []string{ //Zap's internal errors only
-					"stderr",
-				},
-				InitialFields: map[string]interface{}{ //add custom field
-					// "pid": os.Getpid(),
-				},
-			}
-			logger = zap.Must(config.Build())
-		} else { //dev env
-			encoderCfg := zap.NewDevelopmentEncoderConfig()
-			encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
-
-			config := zap.Config{
-				Level:             zap.NewAtomicLevelAt(zap.DebugLevel),
-				Development:       true,
-				DisableCaller:     false,
-				DisableStacktrace: false,
-				Sampling:          nil,
-				Encoding:          "console",
-				EncoderConfig:     encoderCfg,
-				OutputPaths: []string{
-					"stdout",
-				},
-				ErrorOutputPaths: []string{ //Zap's internal errors only
-					"stderr",
-				},
-				InitialFields: map[string]interface{}{ //add custom field
-					// "pid": os.Getpid(),
-				},
-			}
-			logger = zap.Must(config.Build())
+		config := zap.Config{
+			Level:             zap.NewAtomicLevelAt(zap.InfoLevel),
+			Development:       false,
+			DisableCaller:     false,
+			DisableStacktrace: false,
+			Sampling:          nil,
+			Encoding:          "json",
+			EncoderConfig:     encoderCfg,
+			OutputPaths: []string{
+				"stdout",
+			},
+			ErrorOutputPaths: []string{ //Zap's internal errors only
+				"stderr",
+			},
+			InitialFields: map[string]interface{}{ //add custom field
+				// "pid": os.Getpid(),
+			},
 		}
-	})
-	return logger
-}
+		Logger = zap.Must(config.Build())
+	} else { //dev env
+		encoderCfg := zap.NewDevelopmentEncoderConfig()
+		encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
 
-func Get() *zap.Logger {
-	return logger
+		config := zap.Config{
+			Level:             zap.NewAtomicLevelAt(zap.DebugLevel),
+			Development:       true,
+			DisableCaller:     false,
+			DisableStacktrace: false,
+			Sampling:          nil,
+			Encoding:          "console",
+			EncoderConfig:     encoderCfg,
+			OutputPaths: []string{
+				"stdout",
+			},
+			ErrorOutputPaths: []string{ //Zap's internal errors only
+				"stderr",
+			},
+			InitialFields: map[string]interface{}{ //add custom field
+				// "pid": os.Getpid(),
+			},
+		}
+		Logger = zap.Must(config.Build())
+	}
 }
 
 func FromCtx(ctx context.Context) *zap.Logger {
-    l, isType := ctx.Value(value.LoggerKey).(*zap.Logger); 
+	l, isType := ctx.Value(value.LoggerKey).(*zap.Logger)
 	if isType {
-        return l
-    } else {
-		return Get()
+		return l
+	} else {
+		return Logger
 	}
 }

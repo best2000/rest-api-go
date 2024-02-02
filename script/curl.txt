@@ -2,3 +2,5 @@ curl -X GET localhost:8080/dogs/1
 curl -X POST --header "token:xxx" localhost:8080/dogs/ -H 'Content-Type: application/json' -d '{\"name\":\"boat\",\"breed\":\"labrado\"}'
 curl -X DELETE --header "token:xxx" localhost:8080/dogs/5
 curl -X GET --header "token:xxx" -v localhost:8080/dogs/
+
+curl -X GET --header "Authorization:xxx" --header "requestUID:123456" -v localhost:8080/ping

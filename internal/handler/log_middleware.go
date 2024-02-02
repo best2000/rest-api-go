@@ -13,7 +13,7 @@ func LogMid(next http.Handler) http.Handler {
 
 		log := logger.FromCtx(r.Context())
 
-		info, isType := r.Context().Value(value.ApiEndpointInfoKey).(value.ApiEndpointInfo)
+		info, isType := r.Context().Value(value.EndpointInfoKey).(value.EndpointInfo)
 		if isType && info.UserAuditLogFlag {
 			log.Info("logging USER AUDIT LOG")			
 		}

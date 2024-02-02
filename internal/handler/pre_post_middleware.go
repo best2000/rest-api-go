@@ -14,9 +14,9 @@ import (
 	"go.uber.org/zap"
 )
 
-func PrePost(next http.Handler) http.Handler {
+func PrePostMid(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log := logger.Get()
+		log := logger.Logger
 		//pre handle.....
 		start := time.Now()
 
@@ -36,7 +36,6 @@ func PrePost(next http.Handler) http.Handler {
 		//create a child logger from main logger then add the addtional info of request
 		log = log.With(
 			zap.String(string(value.RequestIdKey), requestId),
-			zap.Any("request_uri", r.RequestURI),
 		)
 
 		ctx = context.WithValue(ctx, value.LoggerKey, log)                     //attach logger to context
@@ -58,7 +57,7 @@ func PrePost(next http.Handler) http.Handler {
 			zap.String("http", r.Proto),
 			zap.String("host", r.Host),
 			zap.String("method", r.Method),
-			// zap.String("request_uri", r.RequestURI),
+			zap.String("request_uri", r.RequestURI),
 			zap.String("query_string", r.URL.RawQuery),
 			zap.String("content_type", r.Header.Get("Content-Type")),
 			zap.String("body", string(body)))

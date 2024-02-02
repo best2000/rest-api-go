@@ -1,7 +1,6 @@
 package router
 
 import (
-	"database/sql"
 	"errors"
 	"net/http"
 
@@ -15,7 +14,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func NewChiRouter(db *sql.DB) chi.Router {
+func NewChiRouter() chi.Router {
 	//init router
 	r := chi.NewRouter()
 	//middleware...
@@ -30,8 +29,9 @@ func NewChiRouter(db *sql.DB) chi.Router {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	r.Use(handler.PrePost)
+	r.Use(handler.PrePostMid)
 	r.Use(handler.EndpointInfoMid)
+	r.Use(handler.AuthMid)
 	r.Use(handler.LogMid)
 
 	// dogRepo := repo.DogRepo{Db: db}

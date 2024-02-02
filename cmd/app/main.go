@@ -19,22 +19,22 @@ func main() {
 	config := config.Load()
 
 	//zap logger setup
-	log := logger.New(config.App.Profile)
+	log := logger.Logger
 	defer log.Sync()
 
 	log.Info("initializing server...")
 
 	//connect db
-	db, err := database.New(*config)
+	db, err := database.Connect(*config)
 	if err != nil {
 		log.Error(err.Error())
 	}
-	defer db.Db.Close()
+	defer db.Close()
 
 	log.Info(fmt.Sprintf("listening on %s.", config.Server.Addr))
 
 	//router setup
-	r := router.NewChiRouter(db.Db)
+	r := router.NewChiRouter()
 
 	//server setup
 	s := &http.Server{

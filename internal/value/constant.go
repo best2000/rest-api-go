@@ -1,8 +1,7 @@
 package value
 
-const RequestIdKey string = "request_id"
+const RequestIdKey string = "requestUID"
 const LoggerKey string = "logger"
-const ApiEndpointInfoKey string = "endpoint_info"
+const EndpointInfoKey string = "endpoint_info"
 const UserNameKey string = "username"
-
 const RequestIdHeaderKey string = "requestUID";
