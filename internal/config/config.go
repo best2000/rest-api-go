@@ -2,17 +2,24 @@ package config
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/spf13/viper"
 )
 
 type (
 	Config struct {
-		App App
-		Db  Db
+		App    App
+		Server Server
+		Db     Db
 	}
 
 	App struct {
-		Env string
+		Profile string
+		XxxUrl string
+	}
+
+	Server struct {
 		Addr string
 	}
 
@@ -28,6 +35,9 @@ type (
 )
 
 func Load() *Config {
+	viper.AutomaticEnv() //auto read key env if yaml value is empty
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./config")
@@ -39,8 +49,11 @@ func Load() *Config {
 
 	return &Config{
 		App: App{
-			Env: viper.GetString("app.env"),
-			Addr: viper.GetString("app.server.addr"),
+			Profile: viper.GetString("app.profile"),
+			XxxUrl:  viper.GetString("app.xxxurl"),
+		},
+		Server: Server{
+			Addr: viper.GetString("server.addr"),
 		},
 		Db: Db{
 			Host:     viper.GetString("database.host"),

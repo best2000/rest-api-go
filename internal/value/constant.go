@@ -2,7 +2,7 @@ package value
 
 const RequestIdKey string = "request_id"
 const LoggerKey string = "logger"
-const ApiEndpointFlagsKey string = "endpoint_flags"
+const ApiEndpointInfoKey string = "endpoint_info"
 const UserNameKey string = "username"
 
-const RequestIdHeaderKey string = "X-Request-ID";
+const RequestIdHeaderKey string = "requestUID";

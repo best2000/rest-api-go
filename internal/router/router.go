@@ -20,7 +20,6 @@ func NewChiRouter(db *sql.DB) chi.Router {
 	//init router
 	r := chi.NewRouter()
 	//middleware...
-	// r.Use(middleware.Timeout(time.Second*3))	//set 60 sec request context timeout
 	r.Use(cors.Handler(cors.Options{ //CORS
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"https://*", "http://*"},
@@ -31,15 +30,14 @@ func NewChiRouter(db *sql.DB) chi.Router {
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
-	// r.Use(middleware.Logger)
+	
 	r.Use(handler.PrePost)
-	r.Use(handler.AuthMid)
 	r.Use(middleware.Heartbeat("/"))
 
 	// dogRepo := repo.DogRepo{Db: db}
 	// dogHandler := handler.DogHandler{DogRepo: &dogRepo}
 	// r.Route("/dogs", func(r chi.Router) {
-	// 	r.Method("GET", "/{id}", util.HandlerFunc(dogHandler.GetDogByID))
+	// 	r.Method("GET", "/{id}", HandlerFunc(middleware.Heartbeat("/")))
 	// 	r.Method("GET", "/", util.HandlerFunc(dogHandler.ListAllDog))
 	// 	r.Method("POST", "/", util.HandlerFunc(dogHandler.CreateDog))
 	// 	r.Method("PATCH", "/{id}", util.HandlerFunc(dogHandler.UpdateDogByID))

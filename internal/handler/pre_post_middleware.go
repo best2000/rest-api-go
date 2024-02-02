@@ -46,12 +46,12 @@ func PrePost(next http.Handler) http.Handler {
 		log = log.With(
 			zap.String(string(value.RequestIdKey), requestId),
 			zap.Any("request_uri", r.RequestURI),
-			zap.Any(value.ApiEndpointFlagsKey, endpointFlags),
+			zap.Any(value.ApiEndpointInfoKey, endpointFlags),
 		)
 
 		ctx = context.WithValue(ctx, value.LoggerKey, log)                     //attach logger to context
 		ctx = context.WithValue(ctx, value.RequestIdKey, requestId)            //add X-Request-ID to context
-		ctx = context.WithValue(ctx, value.ApiEndpointFlagsKey, endpointFlags) //add Api endpoint flags to context
+		ctx = context.WithValue(ctx, value.ApiEndpointInfoKey, endpointFlags) //add Api endpoint flags to context
 
 		//read request body for logging
 		body, err := io.ReadAll(r.Body)

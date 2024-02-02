@@ -14,12 +14,11 @@ func AuthMid(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log := logger.FromCtx(r.Context())
 
-		if value.GetApiEndpointFlagsFromCtx(r.Context()).Auth {
-
+		if value.GetApiEndpointInfoFromCtx(r.Context()).FunctionCode != "" {
 			//check auth...
 			log.Info("check auth...")
 
-			tkn := r.Header.Get("token")
+			tkn := r.Header.Get("Authorization")
 			log.Info("token=" + tkn)
 
 			ctx := context.WithValue(r.Context(), value.UserNameKey, tkn)

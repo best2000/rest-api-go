@@ -14,7 +14,7 @@ type PostgresDb struct {
 	Db *sql.DB
 }
 
-func New(cfg config.Config) *PostgresDb {
+func New(cfg config.Config) (*PostgresDb, error) {
 	log := logger.Get()
 
 	psqlInfo := fmt.Sprintf(
@@ -25,16 +25,16 @@ func New(cfg config.Config) *PostgresDb {
 	log.Info("db connection string: " + psqlInfo)
 
 	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	return &PostgresDb{Db: db}
+	return &PostgresDb{Db: db}, err
 }
 
 func (d *PostgresDb) Insert(item interface{}) error {
