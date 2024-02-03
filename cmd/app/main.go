@@ -29,13 +29,11 @@ func main() {
 	tkn.New(*config)
 
 	//connect db
-	db, err := database.Connect(*config)
+	db, err := db.Connect(*config)
 	if err != nil {
 		log.Error(err.Error())
 	}
 	defer db.Close()
-
-	log.Info(fmt.Sprintf("listening on %s.", config.Server.Addr))
 
 	//router setup
 	r := router.NewChiRouter()
@@ -45,6 +43,8 @@ func main() {
 		Addr:    config.Server.Addr,
 		Handler: r,
 	}
+
+	log.Info(fmt.Sprintf("listening on %s.", config.Server.Addr))
 
 	//start server
 	s.ListenAndServe()
