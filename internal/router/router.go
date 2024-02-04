@@ -6,8 +6,9 @@ import (
 
 	// "time"
 
-	"rest-api/internal/handler"
 	"rest-api/internal/buserror"
+	"rest-api/internal/handler"
+	"rest-api/internal/middleware"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
@@ -29,10 +30,10 @@ func NewChiRouter() chi.Router {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	r.Use(handler.PrePostMid)
-	r.Use(handler.EndpointInfoMid)
-	r.Use(handler.AuthMid)
-	r.Use(handler.LogMid)
+	r.Use(middleware.PrePostMid)
+	r.Use(middleware.EndpointInfoMid)
+	r.Use(middleware.AuthMid)
+	r.Use(middleware.LogMid)
 
 	// dogRepo := repo.DogRepo{Db: db}
 	// dogHandler := handler.DogHandler{DogRepo: &dogRepo}
