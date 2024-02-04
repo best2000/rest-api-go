@@ -7,7 +7,7 @@ import (
 	// "time"
 
 	"rest-api/internal/handler"
-	"rest-api/internal/util"
+	"rest-api/internal/buserror"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
@@ -56,7 +56,7 @@ func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Error(err.Error(), zap.Error(err))
 
-		var busErr util.BusinessError
+		var busErr buserror.BusinessError
 		//check bussiness error
 		if errors.As(err, &busErr) {
 			//set bussiness error response
