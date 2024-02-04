@@ -40,6 +40,8 @@ func NewChiRouter() chi.Router {
 
 	r.Method("GET", "/ping", HandlerFunc(handler.Ping))
 
+	r.Mount("/apis/conf/v1", newChequeRouter())
+
 	return r
 }
 
