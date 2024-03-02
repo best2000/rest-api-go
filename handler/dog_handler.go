@@ -33,7 +33,7 @@ func (h *DogHandler) CreateDog(w util.ResponseWriter, r *http.Request) error {
 func (h *DogHandler) ListAllDog(w util.ResponseWriter, r *http.Request) error {
 	log := logger.FromCtx(r.Context())
 
-	log.Info("failing...")
+	log.Info("gona sleep...")
 	
 	return h.DogRepo.GetAllDog(r.Context(), nil)
 }

@@ -48,7 +48,7 @@ func main() {
       `)
 
 	//start server
-	s.ListenAndServe()
-
-	log.Info("lol")
+	err := s.ListenAndServe()
+	
+	panic(err.Error())
 }

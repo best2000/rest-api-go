@@ -21,7 +21,7 @@ func PrePost(next http.Handler) http.Handler {
 		start := time.Now()
 
 		//set request timeout (ctx timeout)
-		ctx, cancel := context.WithTimeout(r.Context(), time.Second*3)
+		ctx, cancel := context.WithTimeout(r.Context(), time.Second*60)
 		defer cancel()
 
 		//get request ID

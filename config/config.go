@@ -51,10 +51,12 @@ func Load() *Config {
 		panic(fmt.Errorf("fatal error config file: %v", err))
 	}
 
+	viper.SetDefault("env","dev")
+
 	return &Config{
 		App: App{
-			Env:  viper.GetString("app.env"),
-			Addr: viper.GetString("app.server.addr"),
+			Env:  viper.GetString("env"),
+			Addr: viper.GetString("server.addr"),
 		},
 		Db: Db{
 			Host:     viper.GetString("database.host"),

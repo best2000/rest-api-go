@@ -30,10 +30,10 @@ func (r *DogRepo) GetAllDog(ctx context.Context, db util.DbQuerist) error {
 		db = r.Db
 	}
 
-	sql := "SELECT pg_sleep(6);"
+	sql := "SELECT pg_sleep(1);"
 	log.Info("sql: " + sql)
 	
-	log.Info("I said failing...")
+	log.Info("Just sleep...")
 
 	_, err := r.Db.ExecContext(ctx, sql)
 	return err
