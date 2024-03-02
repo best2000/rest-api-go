@@ -2,17 +2,20 @@ package config
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/spf13/viper"
 )
 
 type (
 	Config struct {
-		App App
-		Db  Db
+		Profile string
+		App     App
+		Db      Db
 	}
 
 	App struct {
-		Env string
+		Env  string
 		Addr string
 	}
 
@@ -28,9 +31,20 @@ type (
 )
 
 func Load() *Config {
+	viper.AutomaticEnv() //auto read from env vars if yaml value is empty
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./")
+
+	if viper.GetString("profile") == "non-dev" {
+
+	} else { 
+		//assume dev
+
+
+	}
 
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -39,7 +53,7 @@ func Load() *Config {
 
 	return &Config{
 		App: App{
-			Env: viper.GetString("app.env"),
+			Env:  viper.GetString("app.env"),
 			Addr: viper.GetString("app.server.addr"),
 		},
 		Db: Db{

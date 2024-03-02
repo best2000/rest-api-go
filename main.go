@@ -12,7 +12,7 @@ import (
 //TODO
 //pagination
 //graceful shutdown
-	
+
 func main() {
 	//get config
 	config := config.Load()
@@ -28,7 +28,7 @@ func main() {
 	defer db.Close()
 	log.Info("connected to database.")
 
-	log.Info(fmt.Sprintf("listening on %s.",config.App.Addr))
+	log.Info(fmt.Sprintf("listening on %s.", config.App.Addr))
 
 	//router setup
 	r := NewChiRouter(db)
@@ -39,9 +39,6 @@ func main() {
 		Handler: r,
 	}
 
-	//start server
-	go s.ListenAndServe()
-
 	log.Info(`
  ______     ______     ______     ______      ______     ______   __      
 /\  == \   /\  ___\   /\  ___\   /\__  _\    /\  __ \   /\  == \ /\ \     Nothing Special
@@ -50,6 +47,8 @@ func main() {
   \/_/ /_/   \/_____/   \/_____/     \/_/      \/_/\/_/   \/_/     \/_/   EmptyMan_ 
       `)
 
-	c := make(chan int)
-	<-c
+	//start server
+	s.ListenAndServe()
+
+	log.Info("lol")
 }
